@@ -122,7 +122,7 @@ var a = function() {
     };
 
     // in ms
-    cD.sender.throttleWait = 80;
+    cD.sender.throttleWait = 40;
     cD.sendPosition = _.throttle(function(pos) {
             cD.dispatch('chat.new_pos', pos);
         }, cD.sender.throttleWait, true);
@@ -136,7 +136,14 @@ var a = function() {
         console.log($("#name-input").val())
         cD.sender.setName($("#name-input").val());
     };
-    cD.setNameOf
+    
+    cD.sender.triggerPing = function() {
+        var start = new Date();
+        cD.dispatch('chat.ping', {}, function() {
+            var end = new Date();
+            console.log("Ping: " + (end - start) + " ms");
+        });
+    };
 
     cD.translateCoords = function(e) {
         return {
@@ -180,6 +187,7 @@ var a = function() {
             	cD.sender.sendMsg();
             }
         });
+        setInterval(cD.sender.triggerPing, 3500);
     };
 
     cD.setPlayerCss = function() {

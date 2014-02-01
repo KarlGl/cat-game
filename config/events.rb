@@ -14,6 +14,7 @@ WebsocketRails::EventMap.describe do
     subscribe :get_all, :to => ChatController, :with_method => :get_all
     subscribe :set_name, :to => ChatController, :with_method => :set_name
     subscribe :set_attacking, :to => ChatController, :with_method => :set_attacking
+    subscribe :ping, :to => ChatController, :with_method => :ping
   end
   #
   # Here is an example of mapping namespaced events:

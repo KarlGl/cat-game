@@ -63,11 +63,15 @@ class ChatController < WebsocketRails::BaseController
   end
 
   def msg
-  	name = get_name
+    name = get_name
     log message.inspect
-  	text = (message && message[:msg]) || "something"
+    text = (message && message[:msg]) || "something"
     new_message = {:message => name + ' said: ' + text, type: :chat}
-		log_all new_message
+    log_all new_message
+  end
+
+  def ping
+    trigger_success
   end
 
   def new_pos
