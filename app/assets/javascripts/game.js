@@ -118,9 +118,14 @@ var a = function() {
             pos.y = cD.world.height - cD.curPlayer().height() - 1;
         if (pos.y < 0)
             pos.y = 0;
-        cD.dispatch('chat.new_pos', pos);
+        cD.sendPosition(pos);
     };
 
+    // in ms
+    cD.sender.throttleWait = 80;
+    cD.sendPosition = _.throttle(function(pos) {
+            cD.dispatch('chat.new_pos', pos);
+        }, cD.sender.throttleWait, true);
     cD.sender.sendMsg = function() {
         cD.dispatch('chat.msg', {
             msg: $("#msg-input").val()

@@ -74,6 +74,7 @@ class ChatController < WebsocketRails::BaseController
     p = get_player
     p[:x] = message[:x] if (message[:x])
     p[:y] = message[:y] if (message[:y])
+    # sleep 0.1
     WebsocketRails[:game].trigger(:player_moved, p)
     trigger_success
   end
