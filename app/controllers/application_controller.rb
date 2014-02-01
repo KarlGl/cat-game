@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
   def index
-  	@server = "localhost:3000"
+  	@server = "http://cat-game.herokuapp.com"
   	render 'application'
   end
 end
