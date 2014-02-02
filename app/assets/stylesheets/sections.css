@@ -1,0 +1,13 @@
+#world {
+	top: 50%;
+	left: 50%;
+ 	cursor: none;
+	display: inline-block;
+	position: absolute;
+	border: solid green 1px;
+}
+footer {
+	font-size: 8px;
+	position: absolute;
+	bottom: 10px;
+}

@@ -1,0 +1,30 @@
+ .player {
+ 	text-align: center;
+ }
+.player.cat {
+	display: inline-block;
+	position: absolute;
+}
+.player.cat:not(.attack) {
+	background-image: url("/assets/cat.png");
+}
+.player.cat.attack {
+	background-image: url("/assets/cat_attack.jpg");
+}
+.player.mouse {
+	background-image: url("/assets/mouse.jpg");
+	display: inline-block;
+	position: absolute;
+	background-size: 100%;
+	z-index: 1;
+}
+
+.player .name {
+	color: green;
+}
+.player.killed .name {
+	color: red;
+}
+.player.killed .name:after {
+	content: ' KILLED';
+}

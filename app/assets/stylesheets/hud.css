@@ -1,0 +1,58 @@
+
+#hud {
+	width: 200px;
+ 	cursor: auto;
+	display: inline-block;
+	position: absolute;
+	border: solid yellow 1px;
+}
+#chat {
+	height: 50%;
+	border: 3px solid rgba(221, 189, 255, 0.59);
+	border-left: none;
+	border-right: none;
+	position: relative;
+	background-color: rgba(221, 189, 255, 0.59);
+}
+#messages {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.message {
+	border: 1px solid black;
+	font-size: 9px;
+	color: white;
+	width: 100%;
+	word-wrap: break-word;
+}
+.message.notify {
+	background: purple;
+}
+.message.chat {
+	background: blue;
+}
+#msg-send {
+	bottom: 0px;
+	position: absolute;
+	left: 0px;
+}
+#msg-input {
+	height: 2em;
+	position: relative;
+	margin-bottom: -3px;
+}
+
+#name-change {
+	padding: 10px;
+	display: table;
+}
+#name-change .head {
+	display: table-cell;
+	width: 50%;
+	text-align: center;
+}
+#name-change #name-input {
+	display: table-cell;
+	width: 100px;
+	text-align: center;
+}

@@ -1,5 +1,4 @@
-// Chat Dispatcher.	
-var a = function() {
+(function() {
     window.cD = {}
 
     cD.dispatcher = new WebSocketRails(window.server);
@@ -93,11 +92,11 @@ var a = function() {
     };
 
     cD.sender.attack = function() {
-        cD.dispatch('chat.set_attacking', {
+        cD.dispatch('player.set_attacking', {
             is_attacking: true
         });
         setTimeout(function() {
-            cD.dispatch('chat.set_attacking', {
+            cD.dispatch('player.set_attacking', {
                 is_attacking: false
             });
         }, 700);
@@ -124,7 +123,7 @@ var a = function() {
     // in ms
     cD.sender.throttleWait = 40;
     cD.sendPosition = _.throttle(function(pos) {
-            cD.dispatch('chat.new_pos', pos);
+            cD.dispatch('player.new_pos', pos);
         }, cD.sender.throttleWait, true);
     cD.sender.sendMsg = function() {
         cD.dispatch('chat.msg', {
@@ -139,7 +138,7 @@ var a = function() {
     
     cD.sender.triggerPing = function() {
         var start = new Date();
-        cD.dispatch('chat.ping', {}, function() {
+        cD.dispatch('session.ping', {}, function() {
             var end = new Date();
             console.log("Ping: " + (end - start) + " ms");
         });
@@ -158,7 +157,7 @@ var a = function() {
             return rt + cD.makePlayer(pla);
         }, "");
 
-        $('body').append('<div id="world">' + players + '</div>');
+        $('body').append('<div id="world">' + players + '</div><footer>A game using websockets by Karl Glaser</footer>');
 
 
         var chat = '<div id="chat"><div id="messages"></div>	<textarea id="msg-input"/><button id="msg-send">Send</button></div>';
@@ -230,14 +229,12 @@ var a = function() {
 
     cD.channel = cD.dispatcher.subscribe('game');
     cD.channel.bind('logging', log);
-    cD.dispatch('chat.get_id', {}, cD.setPlayerId);
-    cD.dispatch('chat.get_all', {}, cD.createWorld);
+    cD.dispatch('session.get_id', {}, cD.setPlayerId);
+    cD.dispatch('player.get_all', {}, cD.createWorld);
     // join after getting the whole world so i wont add my own player again to the world
     cD.channel.bind('player_joined', cD.appendPlayerToWorld);
     cD.channel.bind('player_left', cD.deletePlayer);
     cD.channel.bind('player_moved', cD.movePlayer);
     cD.channel.bind('player_name_changed', cD.setName);
     cD.channel.bind('player_attacking_changed', cD.setAttacking);
-};
-
-a();
+})();
