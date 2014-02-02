@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+gem 'requirejs-rails', git: 'git://github.com/jwhitley/requirejs-rails.git'
 gem 'websocket-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'

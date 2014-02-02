@@ -1,102 +1,105 @@
-(function() {
-    window.cD = {}
+define(function() {
+    var cD = {};
 
-    cD.dispatcher = new WebSocketRails(window.server);
+    cD.sender = {};
 
-    cD.dispatch = function(name, params, extraCb) {
+    cD.sender.dispatcher = new WebSocketRails(window.server);
 
+    cD.sender.dispatch = function(name, params, extraCb) {
         var success = function(response) {
-            // console.log("<Logger> SUCCESS: ");
+            // console.log("<Logger> SUCCESS Triggered: ");
             // console.log(response);
             if (extraCb)
                 extraCb(response);
-        }
+        };
 
         var failure = function(response) {
             console.log("<Logger> FAIL: " + response);
-        }
+        };
         this.dispatcher.trigger(name, params, success, failure);
     };
 
-    var log = function(msg) {
-        console.log('<Logger RECIEVED>');
-        console.log(msg.message);
-        $('#messages').prepend('<div class="message ' + msg.type + '">' + msg.message + '</div>')
-    }
+    cD.dom = {};
+    cD.dom.get = {};
+    cD.dom.style = {};
 
-    var genName = function() {
-        return "Player" + Math.floor(Math.random() * 1000).toString();
+    cD.dom.log = function(msg) {
+        console.log('<Logger>');
+        console.log(msg.message);
+        $('#messages').prepend('<div class="message ' + msg.type + '">' + msg.message + '</div>');
     };
-    cD.makePlayer = function(pla) {
+
+
+    cD.dom.makePlayer = function(pla) {
+        // bug: first positon not set
         return '<div id="' + pla.id + '" class="player ' + (pla.is_cat ? 'cat ' : 'mouse ') + (pla.is_attacking ? 'attack ' : 'not-attack ') + '">' +
             '<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>' + "</div>"
     };
 
 
-    cD.appendPlayerToWorld = function(pla) {
-        $('#world').append(cD.makePlayer(pla));
-        cD.setPlayerCss();
+    cD.dom.appendPlayerToWorld = function(pla) {
+        $('#world').append(cD.dom.makePlayer(pla));
+        cD.dom.style.setPlayerCss();
     };
 
-    cD.deletePlayer = function(plaId) {
-        cD.getPlayersElement(plaId).remove();
+    cD.dom.deletePlayer = function(plaId) {
+        cD.dom.get.getPlayersElement(plaId).remove();
     };
 
-    cD.getPlayersElement = function(playerId) {
+    cD.dom.get.getPlayersElement = function(playerId) {
         return $('#' + playerId);
     };
 
     cD.curPlayer = function() {
-        return cD.getPlayersElement(cD.state.playerId);
+        return cD.dom.get.getPlayersElement(cD.state.playerId);
     };
 
     // STATE
     cD.state = {};
     cD.state.playerId = null;
 
-    cD.getName = function() {
-        return cD.getNameForPlayer(cD.state.playerId);
+    cD.dom.get.getName = function() {
+        return cD.dom.get.getNameForPlayer(cD.state.playerId);
     };
 
-    cD.getNameForPlayer = function(id) {
-        return cD.getPlayersElement(id).find(".name").html() || id;
+    cD.dom.get.getNameForPlayer = function(id) {
+        return cD.dom.get.getPlayersElement(id).find(".name").html() || id;
     };
 
-    cD.setPlayerId = function(playerId) {
+    cD.state.setPlayerId = function(playerId) {
         cD.state.playerId = playerId;
     }
 
     // DOM movement.
-    cD.movePlayer = function(player) {
-        cD.getPlayersElement(player.id).css('top', player.y)
-        cD.getPlayersElement(player.id).css('left', player.x)
+    cD.dom.movePlayer = function(player) {
+        cD.dom.get.getPlayersElement(player.id).css('top', player.y)
+        cD.dom.get.getPlayersElement(player.id).css('left', player.x)
     }
 
     // pixels world is from edge of window
-    cD.worldOffset = function() {
+    cD.dom.get.worldOffset = function() {
         return $("#world").offset();
     };
 
-    cD.sender = {};
 
     // of any player
     cD.setName = function(p) {
-        cD.getPlayersElement(p.id).find(".name").html(p.name)
+        cD.dom.get.getPlayersElement(p.id).find(".name").html(p.name)
     };
     // of current player
     cD.sender.setName = function(name) {
         cD.curPlayer().find(".name").html(name)
-        cD.dispatch('chat.set_name', {
+        cD.sender.dispatch('chat.set_name', {
             name: name
         });
     };
 
     cD.sender.attack = function() {
-        cD.dispatch('player.set_attacking', {
+        cD.sender.dispatch('player.set_attacking', {
             is_attacking: true
         });
         setTimeout(function() {
-            cD.dispatch('player.set_attacking', {
+            cD.sender.dispatch('player.set_attacking', {
                 is_attacking: false
             });
         }, 700);
@@ -105,8 +108,8 @@
     // Send to server
     cD.sender.updatePos = function(e) {
         var raw = {
-            x: e.pageX - cD.worldOffset().left,
-            y: e.pageY - cD.worldOffset().top
+            x: e.pageX - cD.dom.get.worldOffset().left,
+            y: e.pageY - cD.dom.get.worldOffset().top
         };
         var pos = cD.translateCoords(raw);
         if (pos.x + cD.curPlayer().width() >= cD.world.width)
@@ -123,10 +126,10 @@
     // in ms
     cD.sender.throttleWait = 40;
     cD.sendPosition = _.throttle(function(pos) {
-            cD.dispatch('player.new_pos', pos);
+            cD.sender.dispatch('player.new_pos', pos);
         }, cD.sender.throttleWait, true);
     cD.sender.sendMsg = function() {
-        cD.dispatch('chat.msg', {
+        cD.sender.dispatch('chat.msg', {
             msg: $("#msg-input").val()
         });
         $("#msg-input").val("");
@@ -138,7 +141,7 @@
     
     cD.sender.triggerPing = function() {
         var start = new Date();
-        cD.dispatch('session.ping', {}, function() {
+        cD.sender.dispatch('session.ping', {}, function() {
             var end = new Date();
             console.log("Ping: " + (end - start) + " ms");
         });
@@ -154,7 +157,7 @@
 
     cD.createWorld = function(world) {
         var players = world.players.reduce(function(rt, pla) {
-            return rt + cD.makePlayer(pla);
+            return rt + cD.dom.makePlayer(pla);
         }, "");
 
         $('body').append('<div id="world">' + players + '</div><footer>A game using websockets by Karl Glaser</footer>');
@@ -173,7 +176,7 @@
         $('#world').css('height', cD.world.height);
         $('#world').css('margin-left', -cD.world.width / 2);
         $('#world').css('margin-top', -cD.world.height / 2);
-        cD.setPlayerCss();
+        cD.dom.style.setPlayerCss();
 
         cD.sizeHud();
         $(window).resize(cD.sizeHud);
@@ -189,7 +192,7 @@
         setInterval(cD.sender.triggerPing, 3500);
     };
 
-    cD.setPlayerCss = function() {
+    cD.dom.style.setPlayerCss = function() {
         $('.cat').css('width', cD.cat.width);
         $('.cat').css('height', cD.cat.height);
         $('.mouse').css('width', cD.mouse.width);
@@ -198,8 +201,8 @@
 
     cD.sizeHud = function() {
         $('#hud').css('height', $('#world').height());
-        $('#hud').css('left', cD.worldOffset().left + $('#world').width());
-        $('#hud').css('top', cD.worldOffset().top);
+        $('#hud').css('left', cD.dom.get.worldOffset().left + $('#world').width());
+        $('#hud').css('top', cD.dom.get.worldOffset().top);
         $('#msg-input').css('width', $("#hud").width() - 6);
         $('#msg-send').css('height', $("#msg-input").height());
         $('#msg-send').css('width', '100%');
@@ -207,7 +210,7 @@
     };
 
     cD.setAttacking = function(player) {
-        var p = cD.getPlayersElement(player.id)
+        var p = cD.dom.get.getPlayersElement(player.id)
         if (player.is_attacking) {
             p.addClass('attack');
             p.removeClass('not-attack');
@@ -227,14 +230,15 @@
     cD.mouse.height = 50;
     cD.mouse.width = 50;
 
-    cD.channel = cD.dispatcher.subscribe('game');
-    cD.channel.bind('logging', log);
-    cD.dispatch('session.get_id', {}, cD.setPlayerId);
-    cD.dispatch('player.get_all', {}, cD.createWorld);
+    cD.channel = cD.sender.dispatcher.subscribe('game');
+    cD.channel.bind('logging', cD.dom.log);
+    cD.sender.dispatch('session.get_id', {}, cD.state.setPlayerId);
+    cD.sender.dispatch('player.get_all', {}, cD.createWorld);
     // join after getting the whole world so i wont add my own player again to the world
-    cD.channel.bind('player_joined', cD.appendPlayerToWorld);
-    cD.channel.bind('player_left', cD.deletePlayer);
-    cD.channel.bind('player_moved', cD.movePlayer);
+    cD.channel.bind('player_joined', cD.dom.appendPlayerToWorld);
+    cD.channel.bind('player_left', cD.dom.deletePlayer);
+    cD.channel.bind('player_moved', cD.dom.movePlayer);
     cD.channel.bind('player_name_changed', cD.setName);
     cD.channel.bind('player_attacking_changed', cD.setAttacking);
-})();
+    return cD;
+});
