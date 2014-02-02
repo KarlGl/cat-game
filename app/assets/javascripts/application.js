@@ -15,6 +15,11 @@
 //= require websocket_rails/main
 //= require underscore.min
 
-require(["game/game"], function(cD) {
+requirejs.config({
+    baseUrl: 'assets/game',
+});
+
+
+require(["game"], function(cD) {
 	window.cD = cD;
 });
