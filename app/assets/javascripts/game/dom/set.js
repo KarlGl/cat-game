@@ -1,13 +1,17 @@
 /* 
-	Set stuff that is in the DOM. This is where all state tracking is done.
+    Set stuff that is in the DOM. This is where all state tracking is done.
 */
 define(['dom/style', 'dom/get'], function(domStyle, domGet) {
-		var domSet = {};
-  
+    var domSet = {};
+
     domSet.makePlayer = function(pla) {
-        // bug: first positon not set
-        return '<div id="' + pla.id + '" class="player ' + (pla.is_cat ? 'cat ' : 'mouse ') + (pla.is_attacking ? 'attack ' : 'not-attack ') + '">' +
-            '<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>' + "</div>"
+        var classes = 'class="player ' + (pla.is_cat ? 'cat ' : 'mouse ') + (pla.is_attacking ? 'attack ' : ' ') +
+            '"';
+        var style = 'style="left: ' + (Math.round(pla.x) || 0) + 'px; top:' + (Math.round(pla.y) || 0) + 'px;"';
+        var id = 'id="' + pla.id + '"';
+        return '<div ' +
+            id + ' ' + classes + ' ' + style + '>' + '<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>' +
+            "</div>";
     };
 
     domSet.appendPlayerToWorld = function(pla) {
@@ -29,10 +33,8 @@ define(['dom/style', 'dom/get'], function(domStyle, domGet) {
         var p = domGet.getPlayersElement(player.id)
         if (player.is_attacking) {
             p.addClass('attack');
-            p.removeClass('not-attack');
         } else {
             p.removeClass('attack');
-            p.addClass('not-attack');
         }
     };
 

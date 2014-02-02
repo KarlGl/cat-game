@@ -2,17 +2,21 @@
     Static variables for the game.
 */
 define(function() {
-    var statics = {}
+    var statics = {}, cat = {}, mouse = {}, world = {};
 
-    statics.world = {};
-    statics.world.width = 800;
-    statics.world.height = 600;
-    statics.cat = {};
-    statics.cat.height = 150;
-    statics.cat.width = 200;
-    statics.mouse = {};
-    statics.mouse.height = 50;
-    statics.mouse.width = 50;
+    world.width = 800;
+    world.height = 600;
 
+    cat.height = 150;
+    cat.width = 200;
+    cat.attackTime = 700;
+    cat.recoveryTime = cat.attackTime * 1.68;
+
+    mouse.height = 50;
+    mouse.width = 50;
+
+    statics.world = world;
+    statics.cat = cat;
+    statics.mouse = mouse;
     return statics;
 })

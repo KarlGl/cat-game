@@ -1,5 +1,14 @@
 define(['state'], function(state) {
     var domGet = {};
+
+    domGet.playerPos = function(el) {
+        return el;
+    };
+
+    domGet.playerAttacking = function(el) {
+        return el.hasClass("attack");
+    };
+
     domGet.getPlayersElement = function(playerId) {
         return $('#' + playerId);
     };
@@ -27,7 +36,6 @@ define(['state'], function(state) {
             y: e.y - domGet.curPlayer().height() / 2
         };
     }
-
 
     return domGet;
 });

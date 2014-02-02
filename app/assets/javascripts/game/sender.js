@@ -1,7 +1,7 @@
 /*
     Everything sent to the server flows through here.
 */
-define(['dom/get', 'statics'], function(domGet, statics) {
+define(['dom/get', 'statics', 'state'], function(domGet, statics) {
     sender = {};
     sender.dispatcher = new WebSocketRails(window.server);
 
@@ -19,7 +19,7 @@ define(['dom/get', 'statics'], function(domGet, statics) {
         };
         this.dispatcher.trigger(name, params, success, failure);
     };
-        // of current player
+    // of current player
     sender.setName = function(name) {
         domGet.curPlayer().find(".name").html(name)
         sender.dispatch('chat.set_name', {
@@ -28,14 +28,21 @@ define(['dom/get', 'statics'], function(domGet, statics) {
     };
 
     sender.attack = function() {
-        sender.dispatch('player.set_attacking', {
-            is_attacking: true
-        });
-        window.setTimeout(function() {
+        if (!domGet.playerAttacking(domGet.curPlayer()) && !otherState.playerRecovering ) {
             sender.dispatch('player.set_attacking', {
-                is_attacking: false
+                is_attacking: true
             });
-        }, 700);
+            window.setTimeout(function() {
+                sender.dispatch('player.set_attacking', {
+                    is_attacking: false
+                });
+                otherState.playerRecovering = true;
+                window.setTimeout(function() {
+                    otherState.playerRecovering = false;
+                }, statics.cat.recoveryTime);
+
+            }, statics.cat.attackTime);
+        }
     };
 
     // Send to server
@@ -59,7 +66,7 @@ define(['dom/get', 'statics'], function(domGet, statics) {
     // in ms
     sender.throttleWait = 40;
     sender.sendPosition = _.throttle(function(pos) {
-    sender.dispatch('player.new_pos', pos);
+        sender.dispatch('player.new_pos', pos);
     }, sender.throttleWait, true);
     sender.sendMsg = function() {
         sender.dispatch('chat.msg', {
