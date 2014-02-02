@@ -21,5 +21,4 @@ requirejs.config({
 
 
 require(["game"], function(cD) {
-	window.cD = cD;
 });

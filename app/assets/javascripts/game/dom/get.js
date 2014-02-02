@@ -1,15 +1,15 @@
-define(function() {
-		var domGet = {}
+define(['state'], function(state) {
+    var domGet = {};
     domGet.getPlayersElement = function(playerId) {
         return $('#' + playerId);
     };
 
     domGet.curPlayer = function() {
-        return domGet.getPlayersElement(cD.state.playerId);
+        return domGet.getPlayersElement(state.playerId);
     };
 
     domGet.getName = function() {
-        return domGet.getNameForPlayer(cD.state.playerId);
+        return domGet.getNameForPlayer(state.playerId);
     };
 
     domGet.getNameForPlayer = function(id) {
