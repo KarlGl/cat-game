@@ -29,13 +29,11 @@ define(function() {
         $('#messages').prepend('<div class="message ' + msg.type + '">' + msg.message + '</div>');
     };
 
-
     cD.dom.makePlayer = function(pla) {
         // bug: first positon not set
         return '<div id="' + pla.id + '" class="player ' + (pla.is_cat ? 'cat ' : 'mouse ') + (pla.is_attacking ? 'attack ' : 'not-attack ') + '">' +
             '<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>' + "</div>"
     };
-
 
     cD.dom.appendPlayerToWorld = function(pla) {
         $('#world').append(cD.dom.makePlayer(pla));
