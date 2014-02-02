@@ -1,3 +1,6 @@
+/* 
+	Set stuff that is in the DOM. This is where all state tracking is done.
+*/
 define(['dom/style', 'dom/get'], function(domStyle, domGet) {
 		var domSet = {};
   

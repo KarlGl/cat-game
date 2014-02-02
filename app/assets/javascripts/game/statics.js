@@ -1,5 +1,8 @@
+/*
+    Static variables for the game.
+*/
 define(function() {
-		var statics = {}
+    var statics = {}
 
     statics.world = {};
     statics.world.width = 800;

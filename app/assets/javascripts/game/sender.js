@@ -1,3 +1,6 @@
+/*
+    Everything sent to the server flows through here.
+*/
 define(['dom/get', 'statics'], function(domGet, statics) {
     sender = {};
     sender.dispatcher = new WebSocketRails(window.server);
@@ -56,7 +59,7 @@ define(['dom/get', 'statics'], function(domGet, statics) {
     // in ms
     sender.throttleWait = 40;
     sender.sendPosition = _.throttle(function(pos) {
-        sender.dispatch('player.new_pos', pos);
+    sender.dispatch('player.new_pos', pos);
     }, sender.throttleWait, true);
     sender.sendMsg = function() {
         sender.dispatch('chat.msg', {

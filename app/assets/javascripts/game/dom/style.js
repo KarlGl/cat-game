@@ -1,3 +1,6 @@
+/*
+    Seting css on stuff with js? Goes here.
+*/
 define(['statics', 'dom/get'] ,function(statics, domGet) {
     domStyle = {};
 
@@ -6,7 +9,7 @@ define(['statics', 'dom/get'] ,function(statics, domGet) {
         $('#world').css('height', statics.world.height);
         $('#world').css('margin-left', -statics.world.width / 2);
         $('#world').css('margin-top', -statics.world.height / 2);
-    }
+    };
     domStyle.setPlayerCss = function() {
         $('.cat').css('width', statics.cat.width);
         $('.cat').css('height', statics.cat.height);

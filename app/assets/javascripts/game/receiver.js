@@ -1,5 +1,5 @@
 /* 
-receive worker messages
+    Link received worker messages to callbacks.
 */
 define(['sender', 'dom/get', 'dom/style', 'dom/set', 'state'], function(sender, domGet, domStyle, domSet, otherState) {
     var receiver = {}
