@@ -4,18 +4,58 @@
 define(['dom/style', 'dom/get'], function(domStyle, domGet) {
     var domSet = {};
 
+    domSet.setAttacking = function(player) {
+        var p = domGet.getPlayersElement(player.id)
+        if (player.is_attacking) {
+            p.addClass('attack');
+        } else {
+            p.removeClass('attack');
+        }
+    };
+
+    domSet.setKilled = function(player) {
+        var p = domGet.getPlayersElement(player.id)
+        if (player.killed) {
+            p.addClass('killed');
+        } else {
+            p.removeClass('killed');
+        }
+    };
+
     domSet.makePlayer = function(pla) {
-        var classes = 'class="player ' + (pla.is_cat ? 'cat ' : 'mouse ') + (pla.is_attacking ? 'attack ' : ' ') +
-            '"';
         var style = 'style="left: ' + (Math.round(pla.x) || 0) + 'px; top:' + (Math.round(pla.y) || 0) + 'px;"';
         var id = 'id="' + pla.id + '"';
-        return '<div ' +
-            id + ' ' + classes + ' ' + style + '>' + '<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>' +
-            "</div>";
+
+        var addClasses = function(el) {
+            el.addClass('player');
+            if (pla.is_cat)
+                el.addClass('cat');
+            else
+                el.addClass('mouse');
+
+            if (pla.is_attacking)
+                el.addClass('attack');
+            
+            if (pla.killed)
+                el.addClass('killed');
+
+            return el;
+        };
+        var addId = function(el) {
+            el.attr('id', pla.id);
+            return el;
+        };
+        var addCss = function(el) {
+            el.css('top', pla.y);
+            el.css('left', pla.x);
+            return el;
+        };
+        var player = addCss(addId(addClasses($('<div></div>')))).append('<div class="name">' + (pla.name || pla.id) + '</div>' + '<div class="hp"></div>' + '<div class="energy"></div>');
+        $('#world').append(player);
     };
 
     domSet.appendPlayerToWorld = function(pla) {
-        $('#world').append(domSet.makePlayer(pla));
+        domSet.makePlayer(pla);
         domStyle.setPlayerCss();
     };
 
@@ -27,15 +67,6 @@ define(['dom/style', 'dom/get'], function(domStyle, domGet) {
 
     domSet.deletePlayer = function(plaId) {
         domGet.getPlayersElement(plaId).remove();
-    };
-
-    domSet.setAttacking = function(player) {
-        var p = domGet.getPlayersElement(player.id)
-        if (player.is_attacking) {
-            p.addClass('attack');
-        } else {
-            p.removeClass('attack');
-        }
     };
 
     // DOM movement.
@@ -51,11 +82,12 @@ define(['dom/style', 'dom/get'], function(domStyle, domGet) {
     };
 
     domSet.createWorld = function(world) {
-        var players = world.players.reduce(function(rt, pla) {
-            return rt + domSet.makePlayer(pla);
-        }, "");
 
-        $('body').append('<div id="world">' + players + '</div><footer>A game using websockets by Karl Glaser</footer>');
+        $('body').append('<div id="world">' + '</div><footer>A game using websockets by Karl Glaser</footer>');
+
+        world.players.forEach(function(pla) {
+            domSet.makePlayer(pla);
+        });
 
 
         var chat = '<div id="chat"><div id="messages"></div>    <textarea id="msg-input"/><button id="msg-send">Send</button></div>';

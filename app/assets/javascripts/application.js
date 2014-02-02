@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-collision.min
 //= require websocket_rails/main
 //= require underscore.min
 

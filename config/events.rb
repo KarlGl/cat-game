@@ -20,5 +20,6 @@ WebsocketRails::EventMap.describe do
     subscribe :new_pos, :to => GameController, with_method: :new_pos
     subscribe :get_all, :to => GameController, with_method: :get_all
     subscribe :set_attacking, :to => GameController, with_method: :set_attacking
+    subscribe :set_killed, :to => GameController, with_method: :set_killed
   end
 end

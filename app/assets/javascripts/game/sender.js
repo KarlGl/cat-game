@@ -1,8 +1,45 @@
 /*
     Everything sent to the server flows through here.
 */
-define(['dom/get', 'statics', 'state'], function(domGet, statics) {
+define(['dom/get', 'statics', 'state'], function(domGet, statics, otherState) {
     sender = {};
+
+    sender.attack = function() {
+        if (!domGet.playerAttacking(domGet.curPlayer()) && !otherState.playerRecovering) {
+            sender.dispatch('player.set_attacking', {
+                is_attacking: true
+            });
+            window.setTimeout(function() {
+                sender.dispatch('player.set_attacking', {
+                    is_attacking: false
+                });
+                otherState.playerRecovering = true;
+                window.setTimeout(function() {
+                    otherState.playerRecovering = false;
+                }, statics.cat.recoveryTime);
+
+            }, statics.cat.attackTime);
+
+            // kill stuff
+            $('.player').toArray().forEach(function(player)
+            {
+                if (player.id === otherState.playerId)
+                    return false;
+                if ($(player).collision(domGet.curPlayer()).length)
+                    sender.kill(player.id, true);
+            })
+        }
+    };
+
+
+    sender.kill = function(id, killed) {
+        sender.dispatch('player.set_killed', {
+            id: id,
+            killed: killed
+        });
+    };
+
+
     sender.dispatcher = new WebSocketRails(window.server);
 
     sender.dispatch = function(name, params, extraCb) {
@@ -26,27 +63,10 @@ define(['dom/get', 'statics', 'state'], function(domGet, statics) {
             name: name
         });
     };
-
-    sender.attack = function() {
-        if (!domGet.playerAttacking(domGet.curPlayer()) && !otherState.playerRecovering ) {
-            sender.dispatch('player.set_attacking', {
-                is_attacking: true
-            });
-            window.setTimeout(function() {
-                sender.dispatch('player.set_attacking', {
-                    is_attacking: false
-                });
-                otherState.playerRecovering = true;
-                window.setTimeout(function() {
-                    otherState.playerRecovering = false;
-                }, statics.cat.recoveryTime);
-
-            }, statics.cat.attackTime);
-        }
-    };
-
     // Send to server
     sender.updatePos = function(e) {
+        if (domGet.curPlayer().hasClass('killed')) 
+            return;
         var raw = {
             x: e.pageX - domGet.worldOffset().left,
             y: e.pageY - domGet.worldOffset().top

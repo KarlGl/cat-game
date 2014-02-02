@@ -13,7 +13,7 @@ define(['sender', 'dom/get', 'dom/style', 'dom/set', 'state'], function(sender, 
         $(window).resize(domStyle.sizeHud);
         $('#msg-send').click(sender.sendMsg);
         $('#name-input').keyup(sender.changeName);
-        domGet.curPlayer().click(sender.attack)
+        $("#world").click(sender.attack)
         $('#msg-input').focus();
         $('#msg-input').keyup(function(e) {
             if (e.keyCode === 13) {
@@ -37,5 +37,6 @@ define(['sender', 'dom/get', 'dom/style', 'dom/set', 'state'], function(sender, 
     receiver.channel.bind('player_moved', domSet.movePlayer);
     receiver.channel.bind('player_name_changed', domSet.setName);
     receiver.channel.bind('player_attacking_changed', domSet.setAttacking);
+    receiver.channel.bind('player_killed_changed', domSet.setKilled);
     return receiver;
 });

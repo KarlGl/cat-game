@@ -14,6 +14,9 @@ module PlayerController
   def get_player
     controller_store[:players].find {|p| p[:id] == connection_store[:id]}
   end
+  def get_player_by_id id
+    controller_store[:players].find {|p| p[:id] == id}
+  end
 
   def get_all
     trigger_success game_world
@@ -36,6 +39,13 @@ module PlayerController
     p[:is_attacking] = message[:is_attacking]
     log "attacking changed"
     WebsocketRails[:game].trigger(:player_attacking_changed, p)
+  end
+
+  def set_killed
+    p = get_player_by_id message[:id]
+    log "killed changed"
+    p[:killed] = message[:killed]
+    WebsocketRails[:game].trigger(:player_killed_changed, p)
   end
 
 end
