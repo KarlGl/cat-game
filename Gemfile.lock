@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/jwhitley/requirejs-rails.git
-  revision: f2330104aeca4d193fd5680a22ae7eee85d814b5
+  remote: git://github.com/scalient/requirejs-rails.git
+  revision: e0932125e1d5e5ef823a19955899a0047dd904ae
   specs:
     requirejs-rails (0.9.1)
       railties (>= 3.1.1, < 4.1)
