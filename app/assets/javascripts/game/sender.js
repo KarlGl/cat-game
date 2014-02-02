@@ -52,6 +52,7 @@ define(['dom/get', 'statics', 'state'], function(domGet, statics) {
             y: e.pageY - domGet.worldOffset().top
         };
         var pos = domGet.translateCoords(raw);
+        // Limit and x or y to it's bounds.
         if (pos.x + domGet.curPlayer().width() >= statics.world.width)
             pos.x = statics.world.width - domGet.curPlayer().width() - 1;
         if (pos.x < 0)
