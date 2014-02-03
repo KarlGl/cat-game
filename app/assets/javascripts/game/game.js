@@ -7,6 +7,6 @@ define(['sender', 'dom/get', 'dom/style', 'dom/set', 'statics', 'state', 'receiv
     var args = arguments;
     ['sender', 'domGet', 'domStyle', 'domSet', 'statics', 'otherState', 'receiver'].forEach(function(key, i) {
     	window.a = {};
-        window.a[key] = args[i];
+      window.a[key] = args[i];
     });
 });

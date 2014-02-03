@@ -40,7 +40,7 @@ define(['dom/get', 'statics', 'state'], function(domGet, statics, otherState) {
     };
 
 
-    sender.dispatcher = new WebSocketRails(window.server);
+    sender.dispatcher = new WebSocketRails(window.location.origin.split("http://")[1] + "/websocket");
 
     sender.dispatch = function(name, params, extraCb) {
         var success = function(response) {
