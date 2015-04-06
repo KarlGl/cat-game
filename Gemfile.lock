@@ -1,9 +1,9 @@
 GIT
-  remote: git://github.com/scalient/requirejs-rails.git
-  revision: e0932125e1d5e5ef823a19955899a0047dd904ae
+  remote: git://github.com/jwhitley/requirejs-rails.git
+  revision: dd10bdbbbb5217958cb51b32ec20e0ea75cc330c
   specs:
-    requirejs-rails (0.9.1)
-      railties (>= 3.1.1, < 4.1)
+    requirejs-rails (0.9.5)
+      railties (>= 3.1.1)
 
 GEM
   remote: https://rubygems.org/
